@@ -2,12 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vinyla Shake</title>
-  <link src="src/js/index.js" />
+  <script type="module" src="./src/js/index.js" defer></script>
 </head>
 <body>
-  Vinyla Shake is delicious!!
+  <section class="left-deck">
+    <div class="left-deck-sound">
+      <label for="left-music-input">▲</label>
+      <input type="file" id="left-music-input" accept=".mp3" />
+      <canvas id="left-canvas"></canvas>
+      <audio id="left-audio" ></audio>
+    </div>
+  </section>
+  <section class="right-deck">
+    <div class="right-deck-sound">
+      <label for="right-music-input">▲</label>
+      <input type="file" id="right-music-input" accept=".mp3" />
+      <canvas id="right-canvas"></canvas>
+      <audio id="right-audio" ></audio>
+    </div>
+  </section>
 </body>
 </html>
