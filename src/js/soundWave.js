@@ -1,67 +1,104 @@
+import playVinyl from "./vinyl";
+
 export default async function onChange(side) {
   const files = document.querySelector(`#${side}-music-input`).files;
   const audio = document.querySelector(`#${side}-audio`);
 
   audio.src = URL.createObjectURL(files[0]);
-  audio.load();
-  audio.play();
 
   const context = new AudioContext();
-  const src = context.createMediaElementSource(audio);
-  const analyser = context.createAnalyser();
+  const source = context.createBufferSource();
 
-  const canvas = document.querySelector(`#${side}-canvas`);
-  const ctx = canvas.getContext("2d");
+  const drawAudio = async (url) => {
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await context.decodeAudioData(arrayBuffer);
 
-  src.connect(analyser);
-  analyser.connect(context.destination);
-  analyser.fftSize = 2048;
+    source.buffer = audioBuffer;
+    source.connect(context.destination);
 
-  const frequencyArray = new Uint8Array(analyser.frequencyBinCount);
-  const lineWidth = 2.5;
+    draw(normalizeData(filterData(audioBuffer)));
 
-  const drawLine = (opts, canvas, ctx) => {
-    const { i, height } = opts;
-
-    ctx.strokeStyle = "#C64945";
-    ctx.lineWidth = lineWidth;
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    ctx.moveTo(i, canvas.height / 2);
-    ctx.lineTo(i, canvas.height / 2 + height);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(i, canvas.height / 2);
-    ctx.lineTo(i, canvas.height / 2 - height);
-    ctx.stroke();
+    playVinyl(source, context);
   };
 
-  const renderFrame = () => {
-    requestAnimationFrame(renderFrame);
+  const filterData = (audioBuffer) => {
+    const samplePerSec = 100;
+    const { duration, sampleRate } = audioBuffer;
+    const rawData = audioBuffer.getChannelData(0);
+    const totalSamples = duration * samplePerSec;
+    const blockSize = Math.floor(sampleRate / samplePerSec);
+    const filteredData = [];
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    analyser.getByteTimeDomainData(frequencyArray);
+    for (let i = 0; i < totalSamples; i++) {
+      const blockStart = blockSize * i;
+      let sum = 0;
 
-    for (let i = 0; i < Math.round(canvas.width); i += 3) {
-      let height = frequencyArray[i];
-
-      if (height < 100) {
-        height *= 0.05;
-      } else {
-        if (height < 200 && height > 100) {
-          height = height - 100 + 100 * 0.05;
-        } else {
-          height = (height - 200) * 0.2 + 100 * 1.05;
+      for (let j = 0; j < blockSize; j++) {
+        if (rawData[blockStart + j]) {
+          sum += Math.abs(rawData[blockStart + j]);
         }
       }
 
-      drawLine({ i, height }, canvas, ctx);
+      filteredData.push(sum / blockSize);
+    }
+
+    return filteredData;
+  };
+
+  const normalizeData = (filteredData) => {
+    const multiplier = Math.pow(Math.max(...filteredData), -1);
+
+    return filteredData.map((data) => data * multiplier);
+  };
+
+  const draw = (normalizeData) => {
+    const canvas = document.querySelector(`#${side}-canvas`);
+    const dpr = window.devicePixelRatio || 1;
+    const padding = 20;
+
+    canvas.width = canvas.offsetWidth * dpr;
+    canvas.height = (canvas.offsetHeight + padding * 2) * dpr;
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.scale(dpr, dpr);
+    ctx.translate(0, canvas.offsetHeight / 2 + padding);
+
+    const width = canvas.offsetWidth / normalizeData.length;
+
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = "white";
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, canvas.offsetHeight);
+    ctx.stroke();
+
+    for (let i = 0; i < normalizeData.length; i++) {
+      const x = width * i;
+      let height = normalizeData[i] * canvas.offsetHeight - padding;
+
+      if (height < 0) {
+        height = 0;
+      } else if (height > canvas.offsetHeight / 2) {
+        height = height > canvas.offsetHeight / 2;
+      }
+
+      drawLineSegment(ctx, x, height, width, (i + 1) % 2);
     }
   };
 
-  audio.play();
-  renderFrame();
+  const drawLineSegment = (ctx, x, height, width, isEven) => {
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#C64945";
+    ctx.beginPath();
+    height = isEven ? height : -height;
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, height);
+    ctx.arc(x + width / 2, height, width / 2, Math.PI, 0, isEven);
+    ctx.lineTo(x + width, 0);
+    ctx.stroke();
+  };
+
+  drawAudio(audio.src);
 }
