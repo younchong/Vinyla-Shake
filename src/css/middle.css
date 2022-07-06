@@ -1,0 +1,42 @@
+.deck-middle {
+  display: flex;
+  align-items: center;
+  background: #FAF5C9;
+}
+
+#record_svg {
+  display: block;
+  width: 40vw;
+  margin: 20px auto;
+  cursor: pointer; cursor: hand;
+  user-select: none;
+}
+
+.volume-controller {
+  margin-top: 55%;
+  transform: rotate(0.75turn);
+  width: 100%;
+  -webkit-appearance: none;
+}
+
+.volume-controller::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+  margin-top: -14px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+}
+
+.volume-controller::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #C64945;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}

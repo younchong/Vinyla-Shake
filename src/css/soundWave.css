@@ -1,5 +1,5 @@
 canvas {
-  width: 45vw;
+  width: 50vw;
   height: 20vh;
   background-color: black;
 }
@@ -26,12 +26,6 @@ input[type="file"] {
   border: 0;
 }
 
-.left-deck-sound {
+.deck-sound {
   display: flex;
-  flex-direction: row;
-}
-
-.right-deck-sound {
-  display: flex;
-  flex-direction: row;
 }
