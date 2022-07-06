@@ -1,11 +1,9 @@
 @import "./reset.css";
 @import "./soundWave.css";
-@import "./vinyl.css";
+@import "./middle.css";
 
 body {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
-
   overflow: hidden;
 }

@@ -10,7 +10,7 @@ let size = 512;
 
 let source;
 let context;
-let lastTime;
+let lastTime = 0;
 let lastAngle = 0;
 let duration;
 

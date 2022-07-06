@@ -1,13 +1,21 @@
 import playVinyl from "./vinyl";
+import volumController from "./volumController";
 
 export default async function onChange(side) {
   const files = document.querySelector(`#${side}-music-input`).files;
   const audio = document.querySelector(`#${side}-audio`);
+  const volumInput = document.querySelector(`.${side}-volume`);
 
   audio.src = URL.createObjectURL(files[0]);
 
   const context = new AudioContext();
   const source = context.createBufferSource();
+  const gainNode = context.createGain();
+
+  source.connect(gainNode);
+  gainNode.connect(context.destination);
+
+  volumController(volumInput, gainNode);
 
   const drawAudio = async (url) => {
     const response = await fetch(url);
@@ -15,7 +23,6 @@ export default async function onChange(side) {
     const audioBuffer = await context.decodeAudioData(arrayBuffer);
 
     source.buffer = audioBuffer;
-    source.connect(context.destination);
 
     draw(normalizeData(filterData(audioBuffer)));
 
