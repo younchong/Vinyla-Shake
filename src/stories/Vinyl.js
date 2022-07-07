@@ -1,7 +1,11 @@
 import "./vinyl.css";
 
-export const createVinyl = () => {
+export const createVinyl = ({onMouseDown, onMouseUp}) => {
   const div = document.createElement("div");
+
+  div.addEventListener("mousedown", onMouseDown);
+  div.addEventListener("mouseup", onMouseUp);
+
   div.innerHTML = `
     <svg width="512px" viewBox="0 0 512 512" id="record_svg" >
       <g>
@@ -96,82 +100,6 @@ export const createVinyl = () => {
         </g>
       </g>
     </svg>`;
-
-  const record = document.getElementById("record_svg");
-  const recordGroup = document.getElementById("record_group");
-  const surfaceGroup = document.getElementById("surface_group");
-  let scratching = false;
-  let rotationStart = 0;
-  let rotationOffset = 0;
-  let angle = 0;
-  let lastX = 0;
-  let lastY = 0;
-  let size = 512;
-
-  // if (window.PointerEvent) {
-  //   record.addEventListener("pointerdown", onMouseDown);
-  //   record.addEventListener("pointerup", onMouseUp);
-  //   record.addEventListener("pointermove", onMouseMove);
-  // } else {
-  //   record.addEventListener("mousedown", onMouseDown);
-  //   record.addEventListener("mouseup", onMouseUp);
-  //   record.addEventListener("mousemove", onMouseMove);
-  // }
-
-  rotateRecord();
-
-  function onMouseDown(ev) {
-    scratching = true;
-    lastX = ev.offsetX;
-    lastY = ev.offsetY;
-  }
-
-  function onMouseUp() {
-    scratching = false;
-    rotationOffset = angle;
-    rotationStart = -1;
-
-    rotateRecord();
-  }
-
-  function onMouseMove(ev) {
-    if (scratching) {
-      const deltaX = ev.offsetX - lastX;
-      const deltaY = ev.offsetY - lastY;
-      let rotation = 0;
-
-      if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        const direction = ev.offsetY > size / 2.0 ? -1.0 : 1.0;
-
-        rotation = (deltaX / size) * 180.0 * direction;
-      } else {
-        const direction = ev.offsetX > size / 2.0 ? 1.0 : -0.5;
-
-        rotation = (deltaY / size) * 180.0 * direction;
-      }
-
-      angle += rotation;
-      recordGroup.setAttribute("transform", "rotate(" + angle + ", 256, 256)");
-      surfaceGroup.setAttribute("transform", "rotate(" + angle + ", 256, 256)");
-
-      lastX = ev.offsetX;
-      lastY = ev.offsetY;
-    }
-  }
-
-  function rotateRecord(timestamp) {
-    if (!scratching) {
-      if (timestamp >= 0) {
-        if (rotationStart < 0) {
-          rotationStart = timestamp;
-        }
-        angle = (((timestamp - rotationStart) / 5.0) % 360.0) + rotationOffset;
-        recordGroup.setAttribute("transform", "rotate(" + angle + ", 256, 256)");
-        surfaceGroup.setAttribute("transform", "rotate(" + angle + ", 256, 256)");
-      }
-      window.requestAnimationFrame(rotateRecord);
-    }
-  }
 
   return div;
 };
