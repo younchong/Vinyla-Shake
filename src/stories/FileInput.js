@@ -5,8 +5,9 @@ export const createFileInput = ({onClick}) => {
   const input = document.createElement("input");
   const label = document.createElement("label");
 
+  div.className = "fileDiv";
+
   input.type = "file";
-  input.addEventListener("onChange", onClick);
   input.id = "stroybook-file-input";
 
   label.for = "storybook-file-input";
@@ -14,6 +15,8 @@ export const createFileInput = ({onClick}) => {
 
   div.append(input);
   div.append(label);
+
+  div.addEventListener("click", onClick);
 
   return div;
 };
