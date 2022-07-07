@@ -2,12 +2,13 @@ import { createFileInput } from './FileInput';
 
 export default {
   title: "FileInput",
-  component: createFileInput,
-  argTypes: {onchange: {action: "clicked"}}
-}
+  argTypes: {
+    onClick: {action: "onClick"},
+  },
+};
 
 const Template = ({onClick}) => {
   return createFileInput({onClick});
-}
+};
 
 export const Primary = Template.bind({});
