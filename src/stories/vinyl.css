@@ -1,0 +1,20 @@
+@keyframes rotate {
+  0% {
+    transform: rotate(0, 256, 256);
+  }
+  50% {
+    transform: rotate(180, 256, 256);
+  }
+  100% {
+    transform: rotate(360, 256, 256);
+  }
+}
+
+#record_svg {
+  animation-name: rotate;
+  animation-duration:2s;
+  animation-duration: leaner;
+  animation-iteration-count:3;
+  animation-direction:alternate;
+  animation-fill-mode: forwards;
+}
