@@ -1,3 +1,4 @@
+import bpmChecker from "./BPM";
 import playVinyl from "./vinyl";
 import volumController from "./volumController";
 
@@ -16,6 +17,7 @@ export default async function onChange(side) {
   gainNode.connect(context.destination);
 
   volumController(volumInput, gainNode);
+  bpmChecker(audio.src, source, context);
 
   const drawAudio = async (url) => {
     const response = await fetch(url);
