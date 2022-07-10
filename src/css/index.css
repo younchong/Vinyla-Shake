@@ -1,6 +1,5 @@
 @import "./reset.css";
-@import "./soundWave.css";
-@import "./middle.css";
+@import "./deck.css";
 @font-face {
   font-family: digital;
   src: url("../../public/digital-7.ttf");

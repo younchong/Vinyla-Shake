@@ -1,0 +1,10 @@
+@import "./sound.css";
+@import "./middle.css";
+
+.deck-middle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: #FAF5C9;
+}
