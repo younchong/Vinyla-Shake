@@ -1,0 +1,31 @@
+.deck-sound {
+  display: flex;
+}
+
+#deck-sound-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.deck-sound label {
+  display: flex;
+  align-items: flex-end;
+  padding: .5em .75em;
+  color: #fff;
+  background-color: black;
+  cursor: pointer;
+  -webkit-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+}
+
+#deck-sound-canvas {
+  width: 50vw;
+  height: 20vh;
+  background-color: black;
+}

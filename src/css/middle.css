@@ -1,20 +1,3 @@
-.deck-middle {
-  background: #FAF5C9;
-  position: relative;
-}
-
-.left-deck-vinyl {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.right-deck-vinyl {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 #record_svg {
   width: 40vw;
   margin: 20px auto;
@@ -22,8 +5,7 @@
   user-select: none;
 }
 
-
-.bpm {
+.deck-middle-bpm {
   display: flex;
   transform: rotate(-90deg);
   position: absolute;
@@ -32,7 +14,7 @@
   width: 100%;
 }
 
-.volume {
+.deck-middle-volume {
   display: flex;
   transform: rotate(-90deg);
   position: absolute;
@@ -79,7 +61,7 @@
   background: gray;
 }
 
-.bpm span {
+.bpm-sign {
   width: 40px;
   height: 20px;
   font-size: 20px;
