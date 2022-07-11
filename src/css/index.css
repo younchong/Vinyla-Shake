@@ -1,5 +1,6 @@
 @import "./reset.css";
 @import "./deck.css";
+@import "./mixingFader.css";
 @font-face {
   font-family: digital;
   src: url("../../public/digital-7.ttf");

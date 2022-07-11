@@ -1,0 +1,31 @@
+.mixing-fader {
+  position: absolute;
+  top: 30vh;
+  left: 45vw;
+}
+
+.mixing-fader-controller {
+  -webkit-appearance: none;
+}
+
+.mixing-fader-controller::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+  margin-top: -14px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+
+.mixing-fader-controller::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #C64945;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
