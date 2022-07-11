@@ -1,7 +1,7 @@
 export class AudioView {
-  constructor(target) {
+  constructor(target, position) {
     this.target = target;
-    this.container = document.querySelector(".deck-sound");
+    this.position = position;
   }
 
   template() {
@@ -9,26 +9,26 @@ export class AudioView {
 
     input.type = "file";
     input.accept = ".mp3";
-    input.id = "deck-sound-input";
+    input.id = `deck-sound-input-${this.position}`;
 
     const label = document.createElement("label");
 
-    label.htmlFor = "deck-sound-input";
+    label.htmlFor = `deck-sound-input-${this.position}`;
     label.innerText = "▲";
 
     const canvas = document.createElement("canvas");
 
-    canvas.id = "deck-sound-canvas";
+    canvas.className = "deck-sound-canvas";
 
-    this.container.append(input);
-    this.container.append(label);
-    this.container.append(canvas);
+    this.target.append(input);
+    this.target.append(label);
+    this.target.append(canvas);
 
-    return this.container;
+    return this.target;
   }
 
   async render(state) {
-    if (!this.container.childElementCount) {
+    if (!this.target.childElementCount) {
       this.template();
     }
     this.drawWave(state);
@@ -36,8 +36,7 @@ export class AudioView {
 
   drawWave(data) {
     if (!data) return;
-
-    const canvas = document.querySelector("#deck-sound-canvas");
+    const canvas = this.target.querySelector(".deck-sound-canvas");
     const dpr = window.devicePixelRatio || 1;
     const padding = 20;
 

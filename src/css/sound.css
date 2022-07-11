@@ -2,7 +2,7 @@
   display: flex;
 }
 
-#deck-sound-input {
+.deck-sound input {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -22,9 +22,9 @@
   cursor: pointer;
   -webkit-transition: background-color 0.2s;
   transition: background-color 0.2s;
-}
+} 
 
-#deck-sound-canvas {
+.deck-sound-canvas {
   width: 50vw;
   height: 20vh;
   background-color: black;

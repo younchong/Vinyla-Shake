@@ -12,16 +12,18 @@ import { BpmModel } from "./Model/bpmModel";
 import { BpmView } from "./View/bpmView";
 
 export class Deck {
-  constructor() {
-    this.main = document.querySelector("main");
-    this.middle = document.querySelector(".deck-middle");
+  constructor(target) {
+    this.main = document.querySelector(`.${target}`);
+    this.sound = this.main.querySelector(".deck-sound");
+    this.middle = this.main.querySelector(".deck-middle");
 
     const AudioComponent = new AudioController(
-      this.main,
+      this.sound,
       new AudioModel({
         file: null,
       }),
-      new AudioView(this.main)
+      new AudioView(this.sound, target),
+      target
     );
 
     const BpmComponent = new BpmController(

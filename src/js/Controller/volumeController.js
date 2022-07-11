@@ -28,7 +28,7 @@ export class VolumController {
   init() {}
 
   addEvents() {
-    document
+    this.target
       .querySelector(".volume-controller")
       .addEventListener("input", (e) => {
         const value = e.currentTarget.value;

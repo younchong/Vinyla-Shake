@@ -30,7 +30,7 @@ export class BpmController {
   init() {}
 
   addEvents() {
-    document
+    this.target
       .querySelector(".bpm-controller")
       .addEventListener("input", this.controlBpm.bind(this));
   }
@@ -81,13 +81,13 @@ export class BpmController {
 
       this.bpm = Math.round(top[0].tempo);
 
-      document.querySelector(".bpm-sign").innerText = this.bpm;
+      this.target.querySelector(".bpm-sign").innerText = this.bpm;
     };
   }
 
   controlBpm(e) {
     const value = e.currentTarget.value;
-    const signDiv = document.querySelector(".bpm-sign");
+    const signDiv = this.target.querySelector(".bpm-sign");
 
     this.originSrc &&
       this.originSrc.playbackRate.setValueAtTime(
