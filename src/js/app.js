@@ -2,6 +2,7 @@ import { Deck } from "./deck";
 
 export class App {
   constructor() {
-    this.deck = new Deck("right");
+    this.left = new Deck("left");
+    this.right = new Deck("right");
   }
 }

@@ -1,8 +1,9 @@
 export class AudioController {
-  constructor(target, model, view) {
+  constructor(target, model, view, position) {
     this.target = target;
     this.model = model;
     this.view = view;
+    this.position = position;
 
     this.context = new (window.AudioContext || window.webkitAudioContext)();
     this.source = this.context.createBufferSource();
@@ -60,12 +61,17 @@ export class AudioController {
   init() {}
 
   addEvents() {
-    document.querySelector("#deck-sound-input").addEventListener("change", () => {
-      const file = document.querySelector("#deck-sound-input").files[0];
-      const url = URL.createObjectURL(file);
+    this.target
+      .querySelector(`#deck-sound-input-${this.position}`)
+      .addEventListener("change", this.updateFile.bind(this));
+  }
 
-      this.setState({ file: url });
-    });
+  updateFile() {
+    const file = this.target.querySelector(`#deck-sound-input-${this.position}`)
+      .files[0];
+    const url = URL.createObjectURL(file);
+
+    this.setState({ file: url });
   }
 
   appendChildren() {}

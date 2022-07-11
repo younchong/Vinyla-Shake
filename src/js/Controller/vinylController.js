@@ -60,9 +60,9 @@ export class VinylController {
   }
 
   addEvents() {
-    this.record = document.querySelector("#record_svg");
-    this.recordGroup = document.getElementById("record_group");
-    this.surfaceGroup = document.getElementById("surface_group");
+    this.record = this.target.querySelector("#record_svg");
+    this.recordGroup = this.target.querySelector("#record_group");
+    this.surfaceGroup = this.target.querySelector("#surface_group");
 
     if (window.PointerEvent) {
       this.record.addEventListener("pointerdown", this.onMouseDown.bind(this));
