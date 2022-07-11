@@ -17,7 +17,7 @@ export class Deck {
     this.sound = this.main.querySelector(".deck-sound");
     this.middle = this.main.querySelector(".deck-middle");
 
-    const AudioComponent = new AudioController(
+    this.AudioComponent = new AudioController(
       this.sound,
       new AudioModel({
         file: null,
@@ -44,18 +44,12 @@ export class Deck {
       new VolumeView(this.middle)
     );
 
-    AudioComponent.register(VinylComponent);
-    AudioComponent.register(VolumeComponent);
-    AudioComponent.register(BpmComponent);
+    this.AudioComponent.register(VinylComponent);
+    this.AudioComponent.register(VolumeComponent);
+    this.AudioComponent.register(BpmComponent);
   }
 
   register(observer) {
-    this.observers.push(observer);
-  }
-
-  notify(something) {
-    this.observers.forEach((observer) => {
-      observer.update(something);
-    });
+    this.AudioComponent.register(observer);
   }
 }

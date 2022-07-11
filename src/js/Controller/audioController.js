@@ -47,6 +47,7 @@ export class AudioController {
       context: this.context,
       source: this.source,
       gainNode: this.gainNode,
+      position: this.position,
     });
   }
 
