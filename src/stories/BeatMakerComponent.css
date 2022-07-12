@@ -1,0 +1,78 @@
+.beat-maker{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 30vw;
+  height: 60vh;
+  background: black;
+}
+
+.beat-maker-mic {
+  margin: 10px;
+  font-size: 25px;
+  color: white;
+  background: black;
+  border-style: none;
+  border-radius: 50%;
+}
+
+.high {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.beat-maker-kick {
+  width: 100%;
+  height: 100%;
+  background: blue;
+}
+
+.beat-maker-hat {
+  width: 100%;
+  height: 100%;
+  background: pink;
+}
+
+.middle {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.beat-maker-snare {
+  width: 100%;
+  height: 100%;
+  background: green;
+}
+
+.beat-maker-what {
+  width: 100%;
+  height: 100%;
+  background: red;
+}
+
+.low {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.beat-maker-ma {
+  width: 100%;
+  height: 100%;
+  background: purple;
+}
+
+.beat-maker-user {
+  width: 100%;
+  height: 100%;
+  background: orange;
+}
