@@ -2,6 +2,7 @@
 @import "./deck.css";
 @import "./mixingFader.css";
 @import "./beatMaker.css";
+@import "./recorder.css";
 @font-face {
   font-family: digital;
   src: url("../../public/digital-7.ttf");
