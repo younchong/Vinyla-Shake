@@ -11,6 +11,9 @@ export class RecordController {
     this.isRecording = false;
     this.recordArray = [];
 
+    this.intervalId = null;
+    this.recordStartTime = null;
+
     this.init();
     this.render();
     this.addEvents();
@@ -44,6 +47,14 @@ export class RecordController {
       );
     this.mediaRecorder &&
       this.mediaRecorder.addEventListener("stop", this.stopRecord.bind(this));
+    document
+      .querySelector(".record-modal-back")
+      .addEventListener("click", () => {
+        document.querySelector(".record-modal-back").style.display = "none";
+      });
+    document.querySelector(".record-modal").addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
   }
 
   onMouseDown() {
@@ -54,7 +65,7 @@ export class RecordController {
     const result = Date.now() - this.timer >= 1500;
 
     if (result) {
-      // show modal list
+      document.querySelector(".record-modal-back").style.display = "flex";
     } else {
       this.toggleRecord();
     }
@@ -72,10 +83,23 @@ export class RecordController {
 
       document.querySelector(".record-button").style.background = "blue";
       this.isRecording = true;
+
+      this.recordStartTime = Date.now();
+      this.intervalId = setInterval(() => {
+        const now = Date.now() - this.recordStartTime;
+
+        document.querySelector(".record-time").querySelector("span").innerText =
+          parseFloat(now / 1000).toFixed(2);
+      }, 10);
     } else {
       this.mediaRecorder.stop();
       document.querySelector(".record-button").style.background = "red";
+
       this.isRecording = false;
+      clearTimeout(this.intervalId);
+      this.recordStartTime = null;
+      document.querySelector(".record-time").querySelector("span").innerText =
+        "REC";
     }
   }
 
@@ -93,6 +117,14 @@ export class RecordController {
     audio.setAttribute("controls", "");
     audio.src = url;
 
-    document.querySelector(".beat-maker").append(audio);
+    const audioDiv = document.createElement("div");
+    audioDiv.className = "record-modal-audio";
+    const audioLink = document.createElement("a");
+    audioLink.innerText = "link";
+    audioLink.href = url;
+
+    audioDiv.append(audio);
+    audioDiv.append(audioLink);
+    document.querySelector(".record-modal").append(audioDiv);
   }
 }
