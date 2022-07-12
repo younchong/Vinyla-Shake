@@ -42,7 +42,9 @@ export class BeatMakerController {
   init() {}
 
   addEvents() {
-    document.querySelector(".beat-maker-mic").addEventListener("click", this.startRec.bind(this));
+    document
+      .querySelector(".beat-maker-mic")
+      .addEventListener("click", this.startRec.bind(this));
     document
       .querySelector(".beat-maker-kick")
       .addEventListener("click", this.makeSound.bind(this, "kick"));
@@ -105,8 +107,10 @@ export class BeatMakerController {
 
   async startRec() {
     if (!this.isRecording) {
-      this.mediaStream = await navigator.mediaDevices.getUserMedia({audio: true});
-      this.mediaRecorder= new MediaRecorder(this.mediaStream);
+      this.mediaStream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+      this.mediaRecorder = new MediaRecorder(this.mediaStream);
       this.mediaRecorder.start();
 
       document.querySelector(".beat-maker-mic").style.color = "red";
@@ -120,7 +124,9 @@ export class BeatMakerController {
       };
 
       this.mediaRecorder.onstop = async () => {
-        const blob = new Blob(this.recordArray, {"type": "audio/ogg codecs=opus"});
+        const blob = new Blob(this.recordArray, {
+          type: "audio/ogg codecs=opus",
+        });
         const url = URL.createObjectURL(blob);
         const response = await fetch(url);
         const arrayBuffer = await response.arrayBuffer();

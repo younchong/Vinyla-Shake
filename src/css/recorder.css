@@ -1,0 +1,17 @@
+.record {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.record-button {
+  margin: 15px;
+  border-style: none;
+  background: red;
+  cursor: pointer;
+}
+
+.record-time {
+  color: red;
+}
