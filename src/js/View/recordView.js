@@ -18,10 +18,22 @@ export class RecordView {
     timeDiv.className = "record-time";
     span.innerText = "REC";
 
-    timeDiv.append(span);
+    const modalBack = document.createElement("div");
+    modalBack.className = "record-modal-back";
 
+    const modal = document.createElement("div");
+    modal.className = "record-modal";
+
+    const modalTitle = document.createElement("h1");
+    modalTitle.className = "record-modal-title";
+    modalTitle.innerText = "List";
+
+    modalBack.append(modal);
+    modal.append(modalTitle);
+    timeDiv.append(span);
     div.append(input);
     div.append(timeDiv);
+    div.append(modalBack);
 
     return div;
   }
