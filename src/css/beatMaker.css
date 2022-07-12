@@ -9,7 +9,9 @@
 
 .beat-maker-mic {
   margin: 10px;
-  background: red;
+  font-size: 25px;
+  color: white;
+  background: black;
   border-style: none;
   border-radius: 50%;
 }

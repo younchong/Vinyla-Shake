@@ -8,6 +8,7 @@ export class BeatMakerView {
     container.className = "beat-maker";
 
     const micBtn = document.createElement("input");
+    micBtn.value = "+";
     micBtn.className = "beat-maker-mic";
     micBtn.type = "button";
 

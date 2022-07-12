@@ -109,7 +109,7 @@ export class BeatMakerController {
       this.mediaRecorder= new MediaRecorder(this.mediaStream);
       this.mediaRecorder.start();
 
-      document.querySelector(".beat-maker-mic").style.background = "blue";
+      document.querySelector(".beat-maker-mic").style.color = "red";
 
       setTimeout(() => {
         this.mediaRecorder.stop();
@@ -125,7 +125,7 @@ export class BeatMakerController {
         const response = await fetch(url);
         const arrayBuffer = await response.arrayBuffer();
         const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
-        document.querySelector(".beat-maker-mic").style.background = "red";
+        document.querySelector(".beat-maker-mic").style.color = "white";
         this.recordArray = [];
         this.recorded = audioBuffer;
       };
