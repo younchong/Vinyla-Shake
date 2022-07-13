@@ -10,6 +10,9 @@ import { VolumeView } from "./View/volumeView";
 import { BpmController } from "./Controller/bpmController";
 import { BpmModel } from "./Model/bpmModel";
 import { BpmView } from "./View/bpmView";
+import { EffectController } from "./Controller/effectController";
+import { EffectModel } from "./Model/effectModel";
+import { EffectView } from "./View/effectView";
 
 export class Deck {
   constructor(target) {
@@ -44,9 +47,16 @@ export class Deck {
       new VolumeView(this.middle)
     );
 
+    const EffectComponent = new EffectController(
+      this.main,
+      new EffectModel(null),
+      new EffectView(this.main)
+    );
+
     this.AudioComponent.register(VinylComponent);
     this.AudioComponent.register(VolumeComponent);
     this.AudioComponent.register(BpmComponent);
+    this.AudioComponent.register(EffectComponent);
   }
 
   register(observer) {
