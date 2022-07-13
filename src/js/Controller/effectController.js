@@ -15,7 +15,10 @@ export class EffectController extends Controller {
 
     this.convolver = null;
     this.convolverGain = null;
-    this.masterGain = null;
+
+    this.compressor = null;
+
+    this.oscillator = null;
 
     this.effectOn = false;
 
@@ -29,18 +32,10 @@ export class EffectController extends Controller {
     this.source = source;
     this.gainNode = gainNode;
 
-    this.output = this.context.createGain();
-    this.delay = this.context.createDelay();
-    this.wetLevel = this.context.createGain();
-
-    this.gainNode.connect(this.delay);
-    this.gainNode.connect(this.output);
-    this.delay.connect(this.wetLevel);
-
-    this.output.connect(this.context.destination);
-
     this.convolver = this.context.createConvolver();
     this.convolver.buffer = this.source.buffer;
+
+    this.compressor = this.context.createDynamicsCompressor();
   }
 
   addEvents() {
@@ -67,15 +62,39 @@ export class EffectController extends Controller {
   mouseDown() {
     if (!this.context) return;
 
+    if (this.mode === "ECHO") {
+      this.output = this.context.createGain();
+      this.delay = this.context.createDelay();
+      this.wetLevel = this.context.createGain();
+
+      this.gainNode.connect(this.delay);
+      this.delay.connect(this.wetLevel);
+
+      this.wetLevel.connect(this.output);
+      this.output.connect(this.context.destination);
+    }
+
     if (this.mode === "REVERB") {
-      this.masterGain = this.context.createGain();
       this.convolverGain = this.context.createGain();
-      this.source.connect(this.convolverGain);
-      this.source.connect(this.masterGain);
-      this.convolverGain.connect(this.convolver);
-      this.convolver.connect(this.masterGain);
-      this.masterGain.connect(this.context.destination);
-      this.convolverGain.gain.value = 0;
+
+      this.gainNode.disconnect(this.context.destination);
+      this.gainNode.connect(this.convolver);
+      this.convolver.connect(this.convolverGain);
+      this.convolverGain.connect(this.context.destination);
+    }
+
+    if (this.mode === "COMPRESSOR") {
+      this.compressor.threshold.setValueAtTime(-50, this.context.currentTime);
+
+      this.gainNode.connect(this.compressor);
+      this.compressor.connect(this.context.destination);
+    }
+
+    if (this.mode === "FLANGER") {
+      this.oscillator = this.context.createOscillator();
+      this.output = this.context.createGain();
+      this.oscillator.connect(this.gainNode.gain);
+      this.oscillator.start();
     }
 
     this.effectOn = true;
@@ -90,7 +109,20 @@ export class EffectController extends Controller {
     }
 
     if (this.mode === "REVERB") {
-      this.masterGain.gain.value = 0;
+      this.convolverGain.gain.value = 0;
+      this.gainNode.disconnect(this.convolver);
+      this.gainNode.connect(this.context.destination);
+    }
+
+    if (this.mode === "COMPRESSOR") {
+      this.gainNode.disconnect(this.compressor);
+      this.compressor.disconnect(this.context.destination);
+      this.gainNode.connect(this.context.destination);
+    }
+
+    if (this.mode === "FLANGER") {
+      this.oscillator.frequency.setValueAtTime(440, this.context.currentTime);
+      this.oscillator.stop();
     }
 
     this.effectOn = false;
@@ -98,6 +130,7 @@ export class EffectController extends Controller {
 
   controllEchoEffect(e) {
     if (!this.effectOn) return;
+
     const canvas = this.target.querySelector(".deck-effect-canvas");
 
     if (this.mode === "ECHO") {
@@ -106,8 +139,6 @@ export class EffectController extends Controller {
 
       this.delay.delayTime.value = x;
       this.wetLevel.gain.value = y;
-
-      this.wetLevel.connect(this.output);
     }
 
     if (this.mode === "REVERB") {
@@ -115,12 +146,31 @@ export class EffectController extends Controller {
 
       this.convolverGain.gain.value = x;
     }
+
+    if (this.mode === "COMPRESSOR") {
+      const x = (e.clientX - canvas.offsetLeft) / 600;
+      const y = (e.clientY - canvas.offsetTop) / 3;
+
+      this.compressor.knee.setValueAtTime(y, this.context.currentTime);
+      this.compressor.ratio.setValueAtTime(y / 2, this.context.currentTime);
+      this.compressor.attack.setValueAtTime(x, this.context.currentTime);
+      this.compressor.release.setValueAtTime(x, this.context.currentTime);
+    }
+
+    if (this.mode === "FLANGER") {
+      this.oscillator.frequency.setValueAtTime(
+        e.clientX - canvas.offsetLeft,
+        this.context.currentTime
+      );
+    }
   }
 
   changeMode() {
     const nextMode = {
       ECHO: "REVERB",
-      REVERB: "ECHO",
+      REVERB: "COMPRESSOR",
+      COMPRESSOR: "FLANGER",
+      FLANGER: "ECHO",
     };
 
     this.mode = nextMode[this.mode];
