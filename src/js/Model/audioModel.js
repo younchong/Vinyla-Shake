@@ -1,13 +1,7 @@
-export class AudioModel {
+import { Model } from "./model";
+
+export class AudioModel extends Model {
   constructor(initialState) {
-    this.state = initialState;
-  }
-
-  async setState(newState) {
-    this.state = { ...newState };
-  }
-
-  getState() {
-    return this.state;
+    super(initialState);
   }
 }

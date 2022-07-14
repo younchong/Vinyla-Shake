@@ -1,13 +1,7 @@
-export class MixingFaderModel {
+import { Model } from "./model";
+
+export class MixingFaderModel extends Model {
   constructor(initialState) {
-    this.state = initialState;
-  }
-
-  setState(newState) {
-    this.state = { ...newState };
-  }
-
-  getState() {
-    return this.state;
+    super(initialState);
   }
 }

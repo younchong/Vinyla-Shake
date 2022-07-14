@@ -1,13 +1,7 @@
-export class BeatMakerModel {
+import { Model } from "./model";
+
+export class BeatMakerModel extends Model {
   constructor(initialState) {
-    this.state = initialState;
-  }
-
-  setState(newState) {
-    this.state = { ...newState };
-  }
-
-  getState() {
-    return this.state;
+    super(initialState);
   }
 }
