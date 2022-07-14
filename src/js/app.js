@@ -1,7 +1,7 @@
 import { Deck } from "./deck";
-import { MixingFaderController } from "./Controller/mixingFaderController";
-import { MixingFaderModel } from "./Model/mixingFaderModel";
-import { MixingFaderView } from "./View/mixingFaderView";
+import { CrossFaderController } from "./Controller/crossFaderController";
+import { CrossFaderModel } from "./Model/crossFaderModel";
+import { CrossFaderView } from "./View/crossFaderView";
 import { BeatMakerController } from "./Controller/beatMakerController";
 import { BeatMakerModel } from "./Model/beatMakerModel";
 import { BeatMakerView } from "./View/beatMakerView";
@@ -13,11 +13,6 @@ export class App {
   constructor() {
     this.left = new Deck("left");
     this.right = new Deck("right");
-    this.mixingFader = new MixingFaderController(
-      document.querySelector("body"),
-      new MixingFaderModel(null),
-      new MixingFaderView(document.querySelector("body"))
-    );
     this.beatMaker = new BeatMakerController(
       document.querySelector("body"),
       new BeatMakerModel(null),
@@ -28,8 +23,13 @@ export class App {
       new RecordModel(null),
       new RecordView(document.querySelector(".beat-maker"))
     );
+    this.crossFader = new CrossFaderController(
+      document.querySelector(".beat-maker"),
+      new CrossFaderModel(null),
+      new CrossFaderView(document.querySelector(".beat-maker"))
+    );
 
-    this.left.register(this.mixingFader);
-    this.right.register(this.mixingFader);
+    this.left.register(this.crossFader);
+    this.right.register(this.crossFader);
   }
 }

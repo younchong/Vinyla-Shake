@@ -1,4 +1,4 @@
-export class MixingFaderView {
+export class CrossFaderView {
   constructor(target) {
     this.target = target;
   }
@@ -6,11 +6,11 @@ export class MixingFaderView {
   template() {
     const div = document.createElement("div");
 
-    div.className = "mixing-fader";
+    div.className = "cross-fader";
 
     const input = document.createElement("input");
 
-    input.className = "mixing-fader-controller";
+    input.className = "cross-fader-controller";
     input.type = "range";
     input.min = -1;
     input.max = 1;
