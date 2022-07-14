@@ -30,4 +30,8 @@ export class BpmView {
   render() {
     this.target.append(this.template());
   }
+
+  changeBpm(bpm) {
+    this.target.querySelector(".bpm-sign").innerText = bpm;
+  }
 }

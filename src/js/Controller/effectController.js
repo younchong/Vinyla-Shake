@@ -174,6 +174,6 @@ export class EffectController extends Controller {
     };
 
     this.mode = nextMode[this.mode];
-    this.target.querySelector(".deck-effect-title").innerText = this.mode;
+    this.view.changeMode(this.mode);
   }
 }
