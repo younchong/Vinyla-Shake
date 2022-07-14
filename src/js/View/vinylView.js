@@ -111,7 +111,11 @@ export class VinylView {
   }
 
   updateRecord(angle) {
-    this.target.querySelector("#record_group").setAttribute("transform", `rotate(${angle}, 256, 256)`);
-    this.target.querySelector("#surface_group").setAttribute("transform", `rotate(${angle}, 256, 256)`);
+    this.target
+      .querySelector("#record_group")
+      .setAttribute("transform", `rotate(${angle}, 256, 256)`);
+    this.target
+      .querySelector("#surface_group")
+      .setAttribute("transform", `rotate(${angle}, 256, 256)`);
   }
 }

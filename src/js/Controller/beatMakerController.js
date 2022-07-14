@@ -8,19 +8,6 @@ import ma from "../../../public/sounds/ma.mp3";
 export class BeatMakerController extends Controller {
   constructor(target, model, view) {
     super(target, model, view);
-
-    this.context = new (window.AudioContext || window.webkitAudioContext)();
-    this.source = this.context.createBufferSource();
-    this.gainNode = this.context.createGain();
-
-    this.mediaStream = null;
-    this.mediaRecorder = null;
-    this.recordArray = [];
-    this.isRecording = false;
-    this.recorded = null;
-
-    this.source.connect(this.gainNode);
-    this.gainNode.connect(this.context.destination);
   }
 
   addEvents() {
@@ -60,73 +47,84 @@ export class BeatMakerController extends Controller {
     rawFile.open("GET", files[sound], true);
     rawFile.responseType = "arraybuffer";
     rawFile.onload = async () => {
-      const audioBuffer = await this.context.decodeAudioData(rawFile.response);
+      const { context } = this.getState();
+      const audioBuffer = await context.decodeAudioData(rawFile.response);
 
-      if (this.source) {
-        this.source = this.context.createBufferSource();
-        this.gainNode = this.context.createGain();
+      const source = context.createBufferSource();
+      const gainNode = context.createGain();
 
-        this.source.connect(this.gainNode);
-        this.gainNode.connect(this.context.destination);
-      }
-      this.source.buffer = audioBuffer;
-      this.source.start();
+      source.connect(gainNode);
+      gainNode.connect(context.destination);
+      source.buffer = audioBuffer;
+      source.start();
     };
     rawFile.send();
   }
 
   playRecord() {
-    if (this.source) {
-      this.source = this.context.createBufferSource();
-      this.gainNode = this.context.createGain();
+    const { context, recorded } = this.getState();
+    const source = context.createBufferSource();
+    const gainNode = context.createGain();
 
-      this.source.connect(this.gainNode);
-      this.gainNode.connect(this.context.destination);
-    }
-    this.source.buffer = this.recorded;
-    this.source.start();
+    source.connect(gainNode);
+    gainNode.connect(context.destination);
+    source.buffer = recorded;
+    source.start();
   }
 
   async startRecord() {
-    if (!this.isRecording) {
-      this.mediaStream = await navigator.mediaDevices.getUserMedia({
+    const { isRecording } = this.getState();
+    if (!isRecording) {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
-      this.mediaRecorder = new MediaRecorder(this.mediaStream);
-      this.mediaRecorder.start();
+      const mediaRecorder = new MediaRecorder(mediaStream);
+      mediaRecorder.start();
 
-      this.view.toggleButton(this.isRecording);
+      this.view.toggleButton(isRecording);
+
       setTimeout(() => {
-        const isRecording = this.mediaRecorder.state === "recording";
-        isRecording && this.mediaRecorder.stop();
-        this.isRecording = false;
+        const isRecording = mediaRecorder.state === "recording";
+
+        isRecording && mediaRecorder.stop();
+        this.setState({ ...this.model.getState(), isRecording: false });
       }, 1500);
 
-      this.mediaRecorder.ondataavailable = this.updateRecord.bind(this);
-      this.isRecording = true;
-      this.mediaRecorder.onstop = this.storeRecord.bind(this);
+      mediaRecorder.ondataavailable = this.updateRecord.bind(this);
+      mediaRecorder.onstop = this.storeRecord.bind(this);
+      this.setState({ ...this.getState(), isRecording: true, mediaRecorder });
     } else {
-      this.mediaRecorder.stop();
-      this.view.toggleButton(this.isRecording);
-      this.isRecording = false;
+      const { mediaRecorder, isRecording } = this.getState();
+
+      mediaRecorder.stop();
+      this.view.toggleButton(isRecording);
+      this.setState({ ...this.getState(), isRecording: false });
     }
   }
 
   updateRecord(e) {
-    this.recordArray.push(e.data);
+    const recordArray = [];
+
+    recordArray.push(e.data);
+    this.setState({ ...this.getState(), recordArray });
   }
 
   async storeRecord() {
-    const blob = new Blob(this.recordArray, {
+    const { context, recordArray } = this.getState();
+
+    const blob = new Blob(recordArray, {
       type: "audio/ogg codecs=opus",
     });
     const url = URL.createObjectURL(blob);
     const response = await fetch(url);
     const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
+    const audioBuffer = await context.decodeAudioData(arrayBuffer);
 
     this.view.toggleButton(true);
-    this.recordArray = [];
-    this.recorded = audioBuffer;
+    this.setState({
+      ...this.getState(),
+      recordArray: [],
+      recorded: audioBuffer,
+    });
   }
 }
