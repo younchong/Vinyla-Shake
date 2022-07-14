@@ -23,6 +23,7 @@ export class Deck {
     this.AudioComponent = new AudioController(
       this.sound,
       new AudioModel({
+        context: new (window.AudioContext || window.webkitAudioContext)(),
         file: null,
       }),
       new AudioView(this.sound, target),

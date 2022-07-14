@@ -5,13 +5,6 @@ export class AudioController {
     this.view = view;
     this.position = position;
 
-    this.context = new (window.AudioContext || window.webkitAudioContext)();
-    this.source = this.context.createBufferSource();
-    this.gainNode = this.context.createGain();
-
-    this.source.connect(this.gainNode);
-    this.gainNode.connect(this.context.destination);
-
     this.observers = [];
 
     this.init();
@@ -20,33 +13,34 @@ export class AudioController {
   }
 
   async setState(newState) {
-    const { file } = newState;
+    const { context, file } = newState;
+    let { source } = this.getState();
 
-    this.model.setState(newState);
+    if (source) {
+      source.stop();
+      source = null;
+    }
 
-    const audioBuffer = await this.makeBuffer(file);
+    source = context.createBufferSource();
+    const gainNode = context.createGain();
+
+    source.connect(gainNode);
+    gainNode.connect(context.destination);
+
+    const audioBuffer = await this.makeBuffer(context, file);
     const filteredData = this.filterData(audioBuffer);
     const normalizedData = this.normalizeData(filteredData);
 
-    if (this.source.buffer) {
-      this.source.stop();
-      this.source = null;
-      this.source = this.context.createBufferSource();
+    source.buffer = audioBuffer;
+    source.start();
 
-      this.gainNode = this.context.createGain();
-
-      this.source.connect(this.gainNode);
-      this.gainNode.connect(this.context.destination);
-    }
-
-    this.source.buffer = audioBuffer;
-    this.source.start();
+    this.model.setState({ ...this.getState(), context, source, gainNode });
     this.render(normalizedData);
 
     this.notify({
-      context: this.context,
-      source: this.source,
-      gainNode: this.gainNode,
+      context,
+      source,
+      gainNode,
       position: this.position,
     });
   }
@@ -72,13 +66,13 @@ export class AudioController {
       .files[0];
     const url = URL.createObjectURL(file);
 
-    this.setState({ file: url });
+    this.setState({ ...this.getState(), file: url });
   }
 
-  async makeBuffer(url) {
+  async makeBuffer(context, url) {
     const response = await fetch(url);
     const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
+    const audioBuffer = await context.decodeAudioData(arrayBuffer);
 
     return audioBuffer;
   }
