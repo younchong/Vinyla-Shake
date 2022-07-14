@@ -3,15 +3,6 @@ import { Controller } from "./controller";
 export class RecordController extends Controller {
   constructor(target, model, view) {
     super(target, model, view);
-
-    this.timer;
-    this.mediaStream = null;
-    this.mediaRecorder = null;
-    this.isRecording = false;
-    this.recordArray = [];
-
-    this.intervalId = null;
-    this.recordStartTime = null;
   }
 
   addEvents() {
@@ -28,11 +19,15 @@ export class RecordController extends Controller {
   }
 
   onMouseDown() {
-    this.timer = Date.now();
+    const startTime = Date.now();
+    this.setState({ ...this.getState(), startTime });
   }
 
   onMouseUp() {
-    const isOverTime = Date.now() - this.timer >= 1500;
+    const { startTime } = this.getState();
+    const isOverTime = Date.now() - startTime >= 1000;
+
+    this.setState({ ...this.getState(), startTime: 0 });
 
     if (isOverTime) {
       this.view.toggleModal();
@@ -42,41 +37,53 @@ export class RecordController extends Controller {
   }
 
   async toggleRecord() {
-    if (!this.isRecording) {
-      this.isRecording = true;
+    const { isRecording } = this.getState();
 
-      this.mediaStream = await navigator.mediaDevices.getUserMedia({
+    if (!isRecording) {
+      const recordStartTime = Date.now();
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
-      this.mediaRecorder = new MediaRecorder(this.mediaStream);
-      this.mediaRecorder.start();
-      this.mediaRecorder.ondataavailable = this.updateRecord.bind(this);
-      this.mediaRecorder.onstop = this.makeAudio.bind(this);
+      const mediaRecorder = new MediaRecorder(mediaStream);
 
-      this.view.toggleRecordButton();
-      this.recordStartTime = Date.now();
-      this.intervalId = setInterval(
-        this.view.toggleRecordTime.bind(this, this.recordStartTime),
+      mediaRecorder.start();
+      mediaRecorder.ondataavailable = this.updateRecord.bind(this);
+      mediaRecorder.onstop = this.makeAudio.bind(this);
+
+      const intervalId = setInterval(
+        this.view.toggleRecordTime.bind(this, recordStartTime),
         10
       );
+      this.view.toggleRecordButton();
+
+      this.setState({
+        ...this.getState(),
+        mediaRecorder,
+        intervalId,
+        isRecording: true,
+      });
     } else {
-      this.isRecording = false;
-      this.mediaRecorder.stop();
+      const { mediaRecorder, intervalId } = this.getState();
+      mediaRecorder.stop();
 
       this.view.toggleRecordButton();
       this.view.toggleRecordTime();
 
-      this.recordStartTime = null;
-      clearTimeout(this.intervalId);
+      clearTimeout(intervalId);
+      this.setState({ ...this.getState(), isRecording: false });
     }
   }
 
   updateRecord(e) {
-    this.recordArray.push(e.data);
+    const recordArray = [];
+
+    recordArray.push(e.data);
+    this.setState({ ...this.getState(), recordArray });
   }
 
   async makeAudio() {
-    const blob = new Blob(this.recordArray, {
+    const { recordArray } = this.getState();
+    const blob = new Blob(recordArray, {
       type: "audio/ogg codecs=opus",
     });
     const url = URL.createObjectURL(blob);

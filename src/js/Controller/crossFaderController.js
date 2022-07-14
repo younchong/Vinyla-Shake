@@ -12,16 +12,11 @@ export class CrossFaderController extends Controller {
   }
 
   controllSound(e) {
-    if (
-      !this.getState() ||
-      Object.keys(this.getState()).length !== 4
-    )
-      return;
+    if (!this.getState() || Object.keys(this.getState()).length !== 4) return;
 
     const leftVolume = Math.sin(-e.currentTarget.value * 0.5 * Math.PI) + 1;
     const rightVolume = Math.sin(e.currentTarget.value * 0.5 * Math.PI) + 1;
-    const { leftContext, leftGain, rightContext, rightGain } =
-      this.getState();
+    const { leftContext, leftGain, rightContext, rightGain } = this.getState();
 
     leftGain.gain.setValueAtTime(leftVolume, leftContext.currentTime);
     rightGain.gain.setValueAtTime(rightVolume, rightContext.currentTime);
