@@ -3,12 +3,7 @@ import { Controller } from "./controller";
 export class BpmController extends Controller {
   constructor(target, model, view) {
     super(target, model, view);
-
-    this.context = null;
-    this.source = null;
-    this.gainNode = null;
     this.originSrc = null;
-    this.bpm = null;
   }
 
   addEvents() {
@@ -20,39 +15,40 @@ export class BpmController extends Controller {
   update(information) {
     const { source } = information;
 
-    this.context = new (window.OfflineAudioContext ||
+    const context = new (window.OfflineAudioContext ||
       window.webkitOfflineAudioContext)(
       source.channelCount,
       source.buffer.sampleRate * source.buffer.duration,
       source.buffer.sampleRate
     );
-    this.source = this.context.createBufferSource();
-    this.source.buffer = source.buffer;
+    const newSource = context.createBufferSource();
+    newSource.buffer = source.buffer;
 
+    this.setState({ context, source: newSource });
     this.originSrc = source;
-    this.checkBpm();
+    this.checkBpm(context, newSource);
   }
 
-  checkBpm() {
-    const lowpass = this.context.createBiquadFilter();
+  checkBpm(context, source) {
+    const lowpass = context.createBiquadFilter();
     lowpass.type = "lowpass";
     lowpass.frequency.value = 150;
     lowpass.Q.value = 1;
 
-    this.source.connect(lowpass);
+    source.connect(lowpass);
 
-    const highpass = this.context.createBiquadFilter();
+    const highpass = context.createBiquadFilter();
     highpass.type = "highpass";
     highpass.frequency.value = 100;
     highpass.Q.value = 1;
 
     lowpass.connect(highpass);
-    highpass.connect(this.context.destination);
+    highpass.connect(context.destination);
 
-    this.source.start(0);
-    this.context.startRendering();
+    source.start(0);
+    context.startRendering();
 
-    this.context.oncomplete = (e) => {
+    context.oncomplete = (e) => {
       const buffer = e.renderedBuffer;
       const peaks = this.getPeaks([
         buffer.getChannelData(0),
@@ -61,12 +57,14 @@ export class BpmController extends Controller {
       const groups = this.getIntervals(peaks);
       const top = groups.sort((a, b) => b.count - a.count).splice(0, 5);
 
-      this.bpm = Math.round(top[0].tempo);
-      this.view.changeBpm(this.bpm);
+      const bpm = Math.round(top[0].tempo);
+      this.view.changeBpm(bpm);
+      this.setState({ ...this.getState(), bpm });
     };
   }
 
   controlBpm(e) {
+    const { bpm } = this.getState();
     const value = e.currentTarget.value;
 
     this.originSrc &&
@@ -75,7 +73,7 @@ export class BpmController extends Controller {
         this.originSrc.context.currentTime + 0.5
       );
 
-    this.view.changeBpm((this.bpm * value).toFixed(0));
+    this.view.changeBpm((bpm * value).toFixed(0));
   }
 
   getPeaks(data) {

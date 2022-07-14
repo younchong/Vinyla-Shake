@@ -15,7 +15,10 @@ export class App {
     this.right = new Deck("right");
     this.beatMaker = new BeatMakerController(
       document.querySelector("body"),
-      new BeatMakerModel(null),
+      new BeatMakerModel({
+        context: new (window.AudioContext || window.webkitAudioContext)(),
+        isRecording: false,
+      }),
       new BeatMakerView(document.querySelector("body"))
     );
     this.recordComponent = new RecordController(

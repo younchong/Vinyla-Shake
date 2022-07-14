@@ -3,11 +3,6 @@ import { Controller } from "./controller";
 export class CrossFaderController extends Controller {
   constructor(target, model, view) {
     super(target, model, view);
-
-    this.leftContext = null;
-    this.rightContext = null;
-    this.leftGain = null;
-    this.rightGain = null;
   }
 
   addEvents() {
@@ -17,24 +12,36 @@ export class CrossFaderController extends Controller {
   }
 
   controllSound(e) {
-    const value = Math.sin(-e.currentTarget.value * 0.5 * Math.PI) + 1;
-    const Rvalue = Math.sin(e.currentTarget.value * 0.5 * Math.PI) + 1;
+    if (
+      !this.getState() ||
+      Object.keys(this.getState()).length !== 4
+    )
+      return;
 
-    this.leftGain &&
-      this.leftGain.gain.setValueAtTime(value, this.leftContext.currentTime);
-    this.rightGain &&
-      this.rightGain.gain.setValueAtTime(Rvalue, this.rightContext.currentTime);
+    const leftVolume = Math.sin(-e.currentTarget.value * 0.5 * Math.PI) + 1;
+    const rightVolume = Math.sin(e.currentTarget.value * 0.5 * Math.PI) + 1;
+    const { leftContext, leftGain, rightContext, rightGain } =
+      this.getState();
+
+    leftGain.gain.setValueAtTime(leftVolume, leftContext.currentTime);
+    rightGain.gain.setValueAtTime(rightVolume, rightContext.currentTime);
   }
 
   update(information) {
     const { context, gainNode, position } = information;
 
     if (position === "left") {
-      this.leftContext = context;
-      this.leftGain = gainNode;
+      this.setState({
+        ...this.getState(),
+        leftContext: context,
+        leftGain: gainNode,
+      });
     } else {
-      this.rightContext = context;
-      this.rightGain = gainNode;
+      this.setState({
+        ...this.getState(),
+        rightContext: context,
+        rightGain: gainNode,
+      });
     }
   }
 }
