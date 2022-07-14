@@ -33,4 +33,8 @@ export class EffectView {
   render() {
     this.target.append(this.template());
   }
+
+  changeMode(mode) {
+    this.target.querySelector(".deck-effect-title").innerText = mode;
+  }
 }

@@ -75,16 +75,6 @@ export class AudioController {
     this.setState({ file: url });
   }
 
-  appendChildren() {}
-
-  register(observer) {
-    this.observers.push(observer);
-  }
-
-  notify(information) {
-    this.observers.forEach((observer) => observer.update(information));
-  }
-
   async makeBuffer(url) {
     const response = await fetch(url);
     const arrayBuffer = await response.arrayBuffer();
@@ -121,5 +111,13 @@ export class AudioController {
     const multiplier = Math.pow(Math.max(...filteredData), -1);
 
     return filteredData.map((data) => data * multiplier);
+  }
+
+  register(observer) {
+    this.observers.push(observer);
+  }
+
+  notify(information) {
+    this.observers.forEach((observer) => observer.update(information));
   }
 }

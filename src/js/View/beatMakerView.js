@@ -57,4 +57,12 @@ export class BeatMakerView {
   render() {
     this.target.insertBefore(this.template(), this.target.children[1]);
   }
+
+  toggleButton(isRecording) {
+    if (isRecording) {
+      document.querySelector(".beat-maker-mic").style.color = "white";
+    } else {
+      document.querySelector(".beat-maker-mic").style.color = "red";
+    }
+  }
 }

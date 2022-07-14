@@ -12,6 +12,7 @@ export class BeatMakerController extends Controller {
     this.context = new (window.AudioContext || window.webkitAudioContext)();
     this.source = this.context.createBufferSource();
     this.gainNode = this.context.createGain();
+
     this.mediaStream = null;
     this.mediaRecorder = null;
     this.recordArray = [];
@@ -94,32 +95,38 @@ export class BeatMakerController extends Controller {
       this.mediaRecorder = new MediaRecorder(this.mediaStream);
       this.mediaRecorder.start();
 
-      document.querySelector(".beat-maker-mic").style.color = "red";
-
+      this.view.toggleButton(this.isRecording);
       setTimeout(() => {
-        this.mediaRecorder.stop();
+        const isRecording = this.mediaRecorder.state === "recording";
+        isRecording && this.mediaRecorder.stop();
         this.isRecording = false;
       }, 1500);
-      this.mediaRecorder.ondataavailable = (e) => {
-        this.recordArray.push(e.data);
-      };
 
-      this.mediaRecorder.onstop = async () => {
-        const blob = new Blob(this.recordArray, {
-          type: "audio/ogg codecs=opus",
-        });
-        const url = URL.createObjectURL(blob);
-        const response = await fetch(url);
-        const arrayBuffer = await response.arrayBuffer();
-        const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
-        document.querySelector(".beat-maker-mic").style.color = "white";
-        this.recordArray = [];
-        this.recorded = audioBuffer;
-      };
+      this.mediaRecorder.ondataavailable = this.updateRecord.bind(this);
       this.isRecording = true;
+      this.mediaRecorder.onstop = this.storeRecord.bind(this);
     } else {
       this.mediaRecorder.stop();
+      this.view.toggleButton(this.isRecording);
       this.isRecording = false;
     }
+  }
+
+  updateRecord(e) {
+    this.recordArray.push(e.data);
+  }
+
+  async storeRecord() {
+    const blob = new Blob(this.recordArray, {
+      type: "audio/ogg codecs=opus",
+    });
+    const url = URL.createObjectURL(blob);
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
+
+    this.view.toggleButton(true);
+    this.recordArray = [];
+    this.recorded = audioBuffer;
   }
 }

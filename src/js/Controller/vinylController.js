@@ -9,9 +9,6 @@ export class VinylController extends Controller {
     this.gainNode = null;
 
     this.scratching = false;
-    this.record;
-    this.recordGroup;
-    this.surfaceGroup;
     this.angle = 0;
     this.rotationStart = 0;
     this.rotationOffset = 0;
@@ -47,18 +44,16 @@ export class VinylController extends Controller {
   }
 
   addEvents() {
-    this.record = this.target.querySelector("#record_svg");
-    this.recordGroup = this.target.querySelector("#record_group");
-    this.surfaceGroup = this.target.querySelector("#surface_group");
+    const record = this.target.querySelector("#record_svg");
 
     if (window.PointerEvent) {
-      this.record.addEventListener("pointerdown", this.onMouseDown.bind(this));
-      this.record.addEventListener("pointerup", this.onMouseUp.bind(this));
-      this.record.addEventListener("pointermove", this.onMouseMove.bind(this));
+      record.addEventListener("pointerdown", this.onMouseDown.bind(this));
+      record.addEventListener("pointerup", this.onMouseUp.bind(this));
+      record.addEventListener("pointermove", this.onMouseMove.bind(this));
     } else {
-      this.record.addEventListener("mousedown", this.onMouseDown.bind(this));
-      this.record.addEventListener("mouseup", this.onMouseUp.bind(this));
-      this.record.addEventListener("mousemove", this.onMouseMove.bind(this));
+      record.addEventListener("mousedown", this.onMouseDown.bind(this));
+      record.addEventListener("mouseup", this.onMouseUp.bind(this));
+      record.addEventListener("mousemove", this.onMouseMove.bind(this));
     }
   }
 
@@ -92,14 +87,7 @@ export class VinylController extends Controller {
         this.angle =
           (((timestamp - this.rotationStart) / 5.0) % 360.0) +
           this.rotationOffset;
-        this.recordGroup.setAttribute(
-          "transform",
-          "rotate(" + this.angle + ", 256, 256)"
-        );
-        this.surfaceGroup.setAttribute(
-          "transform",
-          "rotate(" + this.angle + ", 256, 256)"
-        );
+        this.view.updateRecord(this.angle);
       }
       window.requestAnimationFrame(this.rotateRecord.bind(this));
     }
@@ -122,14 +110,7 @@ export class VinylController extends Controller {
       }
 
       this.angle += rotation;
-      this.recordGroup.setAttribute(
-        "transform",
-        "rotate(" + this.angle + ", 256, 256)"
-      );
-      this.surfaceGroup.setAttribute(
-        "transform",
-        "rotate(" + this.angle + ", 256, 256)"
-      );
+      this.view.updateRecord(this.angle);
 
       this.lastX = e.offsetX;
       this.lastY = e.offsetY;

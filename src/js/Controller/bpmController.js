@@ -62,21 +62,20 @@ export class BpmController extends Controller {
       const top = groups.sort((a, b) => b.count - a.count).splice(0, 5);
 
       this.bpm = Math.round(top[0].tempo);
-
-      this.target.querySelector(".bpm-sign").innerText = this.bpm;
+      this.view.changeBpm(this.bpm);
     };
   }
 
   controlBpm(e) {
     const value = e.currentTarget.value;
-    const signDiv = this.target.querySelector(".bpm-sign");
 
     this.originSrc &&
       this.originSrc.playbackRate.setValueAtTime(
         value,
         this.originSrc.context.currentTime + 0.5
       );
-    signDiv.innerText = parseInt(this.bpm * value);
+
+    this.view.changeBpm((this.bpm * value).toFixed(0));
   }
 
   getPeaks(data) {
