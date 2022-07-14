@@ -23,7 +23,9 @@ export class App {
     );
     this.recordComponent = new RecordController(
       document.querySelector(".beat-maker"),
-      new RecordModel(null),
+      new RecordModel({
+        isRecording: false,
+      }),
       new RecordView(document.querySelector(".beat-maker"))
     );
     this.crossFader = new CrossFaderController(
