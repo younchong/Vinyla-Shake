@@ -1,8 +1,6 @@
-import { View } from "./view";
-
-export class EffectView extends View {
+export class EffectView {
   constructor(target) {
-    super(target);
+    this.target = target;
   }
 
   template() {
