@@ -49,7 +49,7 @@ export class Deck {
 
     const EffectComponent = new EffectController(
       this.main,
-      new EffectModel(null),
+      new EffectModel({ mode: "ECHO" }),
       new EffectView(this.main)
     );
 
