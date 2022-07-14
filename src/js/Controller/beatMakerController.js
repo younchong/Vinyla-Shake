@@ -1,14 +1,13 @@
+import { Controller } from "./controller";
 import hat from "../../../public/sounds/drum-hh-01.mp3";
 import kick from "../../../public/sounds/drum-kd-01.mp3";
 import snare from "../../../public/sounds/drum-sd-01.mp3";
 import what from "../../../public/sounds/what.mp3";
 import ma from "../../../public/sounds/ma.mp3";
 
-export class BeatMakerController {
+export class BeatMakerController extends Controller {
   constructor(target, model, view) {
-    this.target = target;
-    this.model = model;
-    this.view = view;
+    super(target, model, view);
 
     this.context = new (window.AudioContext || window.webkitAudioContext)();
     this.source = this.context.createBufferSource();
@@ -21,30 +20,12 @@ export class BeatMakerController {
 
     this.source.connect(this.gainNode);
     this.gainNode.connect(this.context.destination);
-
-    this.init();
-    this.render();
-    this.addEvents();
   }
-
-  setState(newState) {
-    this.model.setState(newState);
-  }
-
-  getState() {
-    return this.model.getState();
-  }
-
-  render(state) {
-    this.view.render(state);
-  }
-
-  init() {}
 
   addEvents() {
     document
       .querySelector(".beat-maker-mic")
-      .addEventListener("click", this.startRec.bind(this));
+      .addEventListener("click", this.startRecord.bind(this));
     document
       .querySelector(".beat-maker-kick")
       .addEventListener("click", this.makeSound.bind(this, "kick"));
@@ -62,7 +43,7 @@ export class BeatMakerController {
       .addEventListener("click", this.makeSound.bind(this, "ma"));
     document
       .querySelector(".beat-maker-user")
-      .addEventListener("click", this.playRec.bind(this));
+      .addEventListener("click", this.playRecord.bind(this));
   }
 
   makeSound(sound) {
@@ -93,7 +74,7 @@ export class BeatMakerController {
     rawFile.send();
   }
 
-  playRec() {
+  playRecord() {
     if (this.source) {
       this.source = this.context.createBufferSource();
       this.gainNode = this.context.createGain();
@@ -105,7 +86,7 @@ export class BeatMakerController {
     this.source.start();
   }
 
-  async startRec() {
+  async startRecord() {
     if (!this.isRecording) {
       this.mediaStream = await navigator.mediaDevices.getUserMedia({
         audio: true,

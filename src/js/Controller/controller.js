@@ -4,8 +4,8 @@ export class Controller {
     this.model = model;
     this.view = view;
 
-    this.render();
     this.init();
+    this.render();
     this.addEvents();
   }
 
