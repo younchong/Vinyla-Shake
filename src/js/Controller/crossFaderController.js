@@ -1,6 +1,6 @@
 import { Controller } from "./controller";
 
-export class MixingFaderController extends Controller {
+export class CrossFaderController extends Controller {
   constructor(target, model, view) {
     super(target, model, view);
 
@@ -12,7 +12,7 @@ export class MixingFaderController extends Controller {
 
   addEvents() {
     document
-      .querySelector(".mixing-fader-controller")
+      .querySelector(".cross-fader-controller")
       .addEventListener("input", this.controllSound.bind(this));
   }
 
