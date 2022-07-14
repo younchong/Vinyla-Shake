@@ -4,7 +4,7 @@ export class Model {
   }
 
   setState(newState) {
-    this.state = newState;
+    this.state = { ...newState };
   }
 
   getState() {

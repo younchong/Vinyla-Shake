@@ -17,6 +17,7 @@ export class EffectView extends View {
     title.textContent = "ECHO";
 
     const button = document.createElement("input");
+    button.value = "►";
     button.type = "button";
     button.className = "deck-effect-button";
 
