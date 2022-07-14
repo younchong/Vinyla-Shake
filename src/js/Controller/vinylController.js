@@ -3,27 +3,6 @@ import { Controller } from "./controller";
 export class VinylController extends Controller {
   constructor(target, model, view) {
     super(target, model, view);
-
-    this.context = null;
-    this.source = null;
-    this.gainNode = null;
-
-    this.scratching = false;
-    this.angle = 0;
-    this.rotationStart = 0;
-    this.rotationOffset = 0;
-    this.lastX = 0;
-    this.lastY = 0;
-    this.size = 512;
-
-    this.lastTime = 0;
-    this.lastAngle = 0;
-    this.duration;
-
-    this.audioTime;
-    this.lastPlaybackRate;
-    this.playingTime = 0;
-    this.startTime = 0;
   }
 
   init() {
@@ -33,13 +12,7 @@ export class VinylController extends Controller {
   update(information) {
     const { context, source, gainNode } = information;
 
-    this.context = context;
-    this.source = source;
-    this.gainNode = gainNode;
-
-    this.startTime = context.currentTime;
-    this.audioTime = context.currentTime + source.buffer.duration;
-
+    this.setState({ ...this.getState(), context, source, gainNode });
     this.init();
   }
 
@@ -58,69 +31,97 @@ export class VinylController extends Controller {
   }
 
   onMouseDown(e) {
-    this.scratching = true;
-    this.lastX = e.offsetX;
-    this.lastY = e.offsetY;
-    this.lastTime = this.context && this.context.currentTime;
+    const { context, source } = this.getState();
+    const scratching = true;
+    const lastX = e.offsetX;
+    const lastY = e.offsetY;
+    const lastTime = context && context.currentTime;
 
-    this.source && this.source.playbackRate.setValueAtTime(0, this.lastTime);
+    source && source.playbackRate.setValueAtTime(0, lastTime);
+    this.setState({
+      ...this.getState(),
+      scratching,
+      lastX,
+      lastY,
+      lastTime,
+    });
   }
 
   onMouseUp() {
-    this.scratching = false;
-    this.rotationOffset = this.angle;
-    this.rotationStart = -1;
+    const { context, source, angle } = this.getState();
+    const scratching = false;
+    const rotationOffset = angle;
+    const rotationStart = -1;
 
-    this.source &&
-      this.source.playbackRate.setValueAtTime(1, this.context.currentTime);
-    this.lastPlaybackRate = 1;
+    source && source.playbackRate.setValueAtTime(1, context.currentTime);
+    const lastPlaybackRate = 1;
 
+    this.setState({
+      ...this.getState(),
+      scratching,
+      rotationOffset,
+      rotationStart,
+      lastPlaybackRate,
+    });
     this.rotateRecord();
   }
 
   rotateRecord(timestamp) {
-    if (!this.scratching && this.source) {
+    const { scratching, source, rotationOffset } = this.getState();
+    let { angle, rotationStart } = this.getState();
+
+    if (!scratching && source) {
       if (timestamp >= 0) {
-        if (this.rotationStart < 0) {
-          this.rotationStart = timestamp;
+        if (rotationStart < 0) {
+          rotationStart = timestamp;
         }
-        this.angle =
-          (((timestamp - this.rotationStart) / 5.0) % 360.0) +
-          this.rotationOffset;
-        this.view.updateRecord(this.angle);
+        angle = (((timestamp - rotationStart) / 5.0) % 360.0) + rotationOffset;
+        this.view.updateRecord(angle);
       }
+
+      this.setState({ ...this.getState(), rotationStart, angle });
       window.requestAnimationFrame(this.rotateRecord.bind(this));
     }
   }
 
   onMouseMove(e) {
-    if (this.scratching) {
-      const deltaX = e.offsetX - this.lastX;
-      const deltaY = e.offsetY - this.lastY;
+    const { scratching, size, source, lastTime } = this.getState();
+    let { lastX, lastY, angle, lastAngle } = this.getState();
+
+    if (scratching) {
+      const deltaX = e.offsetX - lastX;
+      const deltaY = e.offsetY - lastY;
       let rotation = 0;
 
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        const direction = e.offsetY > this.size / 2.0 ? -1.0 : 1.0;
+        const direction = e.offsetY > size / 2.0 ? -1.0 : 1.0;
 
-        rotation = (deltaX / this.size) * 180.0 * direction;
+        rotation = (deltaX / size) * 180.0 * direction;
       } else {
-        const direction = e.offsetX > this.size / 2.0 ? 1.0 : -0.5;
+        const direction = e.offsetX > size / 2.0 ? 1.0 : -0.5;
 
-        rotation = (deltaY / this.size) * 180.0 * direction;
+        rotation = (deltaY / size) * 180.0 * direction;
       }
 
-      this.angle += rotation;
-      this.view.updateRecord(this.angle);
+      angle += rotation;
+      lastX = e.offsetX;
+      lastY = e.offsetY;
+      this.view.updateRecord(angle);
 
-      this.lastX = e.offsetX;
-      this.lastY = e.offsetY;
+      const diff = parseFloat((angle - lastAngle) / 3).toFixed(2);
+      const lastPlaybackRate = diff;
 
-      const diff = parseFloat((this.angle - this.lastAngle) / 3).toFixed(2);
+      lastAngle = angle;
+      source && source.playbackRate.setValueAtTime(diff, lastTime);
 
-      this.lastPlaybackRate = diff;
-      this.lastAngle = this.angle;
-      this.source &&
-        this.source.playbackRate.setValueAtTime(diff, this.lastTime);
+      this.setState({
+        ...this.getState(),
+        lastX,
+        lastY,
+        angle,
+        lastAngle,
+        lastPlaybackRate,
+      });
     }
   }
 }

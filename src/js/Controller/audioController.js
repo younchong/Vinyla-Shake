@@ -32,6 +32,7 @@ export class AudioController {
     const normalizedData = this.normalizeData(filteredData);
 
     source.buffer = audioBuffer;
+    source.loop = true;
     source.start();
 
     this.model.setState({ ...this.getState(), context, source, gainNode });

@@ -38,7 +38,17 @@ export class Deck {
 
     const VinylComponent = new VinylController(
       this.middle,
-      new VinylModel(null),
+      new VinylModel({
+        scratching: false,
+        angle: 0,
+        rotationStart: 0,
+        rotationOffset: 0,
+        lastX: 0,
+        lastY: 0,
+        size: 512,
+        lastTime: 0,
+        lastAngle: 0,
+      }),
       new VinylView(this.middle)
     );
 
