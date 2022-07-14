@@ -1,32 +1,14 @@
-export class MixingFaderController {
+import { Controller } from "./controller";
+
+export class MixingFaderController extends Controller {
   constructor(target, model, view) {
-    this.target = target;
-    this.model = model;
-    this.view = view;
+    super(target, model, view);
 
     this.leftContext = null;
     this.rightContext = null;
     this.leftGain = null;
     this.rightGain = null;
-
-    this.init();
-    this.render();
-    this.addEvents();
   }
-
-  setState(newState) {
-    this.model.setState(newState);
-  }
-
-  getState() {
-    return this.model.getState();
-  }
-
-  render(state) {
-    this.view.render(state);
-  }
-
-  init() {}
 
   addEvents() {
     document

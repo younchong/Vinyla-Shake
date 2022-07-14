@@ -1,31 +1,13 @@
-export class VolumController {
+import { Controller } from "./controller";
+
+export class VolumController extends Controller {
   constructor(target, model, view) {
-    this.target = target;
-    this.model = model;
-    this.view = view;
+    super(target, model, view);
 
     this.context = null;
     this.source = null;
     this.gainNode = null;
-
-    this.init();
-    this.render();
-    this.addEvents();
   }
-
-  setState(newState) {
-    this.model.setState(newState);
-  }
-
-  getState() {
-    return this.model.getState();
-  }
-
-  render(state) {
-    this.view.render(state);
-  }
-
-  init() {}
 
   addEvents() {
     this.target

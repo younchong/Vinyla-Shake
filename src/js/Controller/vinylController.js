@@ -1,8 +1,8 @@
-export class VinylController {
+import { Controller } from "./controller";
+
+export class VinylController extends Controller {
   constructor(target, model, view) {
-    this.target = target;
-    this.model = model;
-    this.view = view;
+    super(target, model, view);
 
     this.context = null;
     this.source = null;
@@ -27,19 +27,6 @@ export class VinylController {
     this.lastPlaybackRate;
     this.playingTime = 0;
     this.startTime = 0;
-
-    this.render();
-    this.init();
-    this.addEvents();
-  }
-
-  setState(newState) {
-    this.model.setState(newState);
-    this.render(this.model.getState());
-  }
-
-  render(state) {
-    this.view.render(state);
   }
 
   init() {
