@@ -35,11 +35,10 @@
 
 .volume-controller::-webkit-slider-thumb, .bpm-controller::-webkit-slider-thumb {
   -webkit-appearance: none;
-  margin-top: -14px;
   border: 1px solid #000000;
   border-radius: 3px;
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  background: #ffffff;
+  background: linear-gradient(180deg,#555 0%,#222 49%, #000 51%,#222 100%);
   cursor: pointer;
 }
 
@@ -47,7 +46,7 @@
   border-radius: 1.3px;
   border: 0.2px solid #010101;
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  background: #C64945;
+  background: linear-gradient(180deg,#555 0%,#222 49%, #000 51%,#222 100%);
   cursor: pointer;
 }
 
