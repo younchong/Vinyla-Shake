@@ -10,17 +10,15 @@
 }
 
 body {
-  display: flex;
-  justify-content: space-between;
-  
-  width: 100vw;
-  height: 100vh;
-
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   overflow: hidden;
+  background: black;
 }
 
 main {
   display: flex;
   flex-direction: column;
-  width: 40vw;
+  justify-content: center;
+  align-items: center;
 }
