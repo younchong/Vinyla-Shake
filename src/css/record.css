@@ -8,10 +8,11 @@
 
 .record-button {
   margin: 15px;
-  background: red;
   border-style: none;
   border-radius: 50%;
+  background: red;
   cursor: pointer;
+  user-select: none;
 }
 
 .on {
@@ -39,6 +40,8 @@
 
 .record-time {
   color: red;
+  font-family: "digital";
+  font-size: 30px;
 }
 
 .record-modal-back {
@@ -71,17 +74,17 @@
 }
 
 .record-modal-title {
+  margin: 10px;
   font-size: 50px;
   color: white;
-  margin: 10px;
 }
 
 .record-modal-audio {
   display: flex;
-  width: 100%;
-  margin: 10px 0;
   justify-content: space-around;
   align-items: center;
+  width: 100%;
+  margin: 10px 0;
   background: gray;
   padding: 10px;
 }

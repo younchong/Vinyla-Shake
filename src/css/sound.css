@@ -1,16 +1,17 @@
 .deck-sound {
   display: flex;
+  width: 100%;
 }
 
 .deck-sound input {
+  overflow: hidden;
   position: absolute;
   width: 1px;
   height: 1px;
   padding: 0;
   margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
   border: 0;
+  clip: rect(0, 0, 0, 0);
 }
 
 .deck-sound label {
@@ -25,7 +26,7 @@
 } 
 
 .deck-sound-canvas {
-  width: 50vw;
+  width: 40vw;
   height: 20vh;
   background-color: black;
 }

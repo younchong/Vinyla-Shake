@@ -5,6 +5,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  background: #FAF5C9;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(217, 217, 217,1) 1.9894561598224194%,rgba(215, 215, 215,1) 1.9894561598224194%,rgba(168, 168, 168,1) 16.535562338142803%,rgba(242, 242, 242,1) 30.514937106918236%,rgba(153, 153, 153,1) 43.549759526452085%,rgba(172, 172, 172,1) 47.516879393266734%,rgba(242, 242, 242,1) 63.76317980022197%,rgba(107, 107, 107,1) 92.66648168701441%);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+.deck-middle.right {
+  flex-direction: row-reverse;
 }

@@ -19,6 +19,7 @@ export class Deck {
     this.main = document.querySelector(`.${target}`);
     this.sound = this.main.querySelector(".deck-sound");
     this.middle = this.main.querySelector(".deck-middle");
+    this.middle.classList.add(`${target}`);
 
     this.AudioComponent = new AudioController(
       this.sound,
