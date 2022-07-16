@@ -22,7 +22,7 @@
 }
 
 .volume-controller, .bpm-controller {
-  -webkit-appearance: slider-vertical ;
+  -webkit-appearance: slider-vertical;
 }
 
 .bpm-controller {

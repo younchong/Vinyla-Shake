@@ -29,10 +29,12 @@ Primary.args = {
       document.querySelector(".record-modal-back").style.display = "flex";
     } else {
       if (isRecording) {
-        document.querySelector(".record-button").style.background = "red";
+        document.querySelector(".record-button").classList.remove("on");
+        document.querySelector(".record-button").classList.add("off");
         isRecording = false;
       } else {
-        document.querySelector(".record-button").style.background = "blue";
+        document.querySelector(".record-button").classList.remove("off");
+        document.querySelector(".record-button").classList.add("on");
         isRecording = true;
       }
     }

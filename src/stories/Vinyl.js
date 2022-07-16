@@ -1,10 +1,11 @@
 import "./vinyl.css";
 
-export const createVinyl = ({onMouseDown, onMouseUp}) => {
+export const createVinyl = ({onMouseDown, onMouseUp, onMouseMove}) => {
   const div = document.createElement("div");
 
   div.addEventListener("mousedown", onMouseDown);
   div.addEventListener("mouseup", onMouseUp);
+  div.addEventListener("mousemove", onMouseMove);
 
   div.innerHTML = `
     <svg width="512px" viewBox="0 0 512 512" id="record_svg" >
