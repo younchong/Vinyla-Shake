@@ -7,7 +7,7 @@
     "start": "webpack-dev-server",
     "check": "npx prettier --write src/js",
     "build": "webpack --mode=production",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
@@ -39,7 +39,6 @@
     "babel-loader": "^8.2.5",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.1",
-    "cypress": "^10.3.0",
     "eslint": "^8.18.0",
     "eslint-plugin-storybook": "^0.5.13",
     "file-loader": "^6.2.0",

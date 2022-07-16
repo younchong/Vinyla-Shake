@@ -11,7 +11,7 @@ export const createRecordComponent = ({
   const input = document.createElement("input");
 
   input.type = "button";
-  input.className = "record-button";
+  input.className = "record-button off";
   input.addEventListener("mousedown", mousedown);
   input.addEventListener("mouseup", mouseup);
 

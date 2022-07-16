@@ -1,3 +1,8 @@
+@font-face {
+  font-family: digital;
+  src: url("../../public/digital-7.ttf");
+}
+
 .deck-effect {
   display: flex;
   flex-direction: column;
@@ -9,23 +14,27 @@
 }
 
 .deck-effect-header {
-  width: 70%;
   display: flex;
   justify-content: space-around;
   align-items: center;
   color: red;
-  margin: 10px;
+  font-family: "digital";
+  font-size: 30px;
 }
 
 .deck-effect-button {
   color: red;
   background: black;
-  font-size: 20px;
   border-style: none;
+  font-size: 30px;
 }
 
 .deck-effect-canvas {
   width: 80%;
   height: 50%;
-  background: rgba(61, 61, 61, 1);
+  border-radius: 10px;
+  background: conic-gradient(#d7d7d7, #c3c3c3, #cccccc, #c6c6c6,
+  #d7d7d7, #c3c3c3, #cccccc, #c6c6c6,
+  #d7d7d7, #c3c3c3, #cccccc, #c6c6c6,
+  #d7d7d7, #c3c3c3, #cccccc, #c6c6c6);
 }
