@@ -12,6 +12,8 @@ export class RecordController extends Controller {
 
     recordButton.addEventListener("touchstart", this.onMouseDown.bind(this));
     recordButton.addEventListener("touchend", this.onMouseUp.bind(this));
+    recordButton.addEventListener("mousedown", this.onMouseDown.bind(this));
+    recordButton.addEventListener("mouseup", this.onMouseUp.bind(this));
     recordModal.addEventListener("click", (e) => {
       e.stopPropagation();
     });
@@ -84,7 +86,7 @@ export class RecordController extends Controller {
   async makeAudio() {
     const { recordArray } = this.getState();
     const blob = new Blob(recordArray, {
-      type: "audio/ogg codecs=opus",
+      type: "audio/mpeg codecs=opus",
     });
     const url = URL.createObjectURL(blob);
 
