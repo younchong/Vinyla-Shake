@@ -83,6 +83,8 @@ export class RecordView {
 
     const audio = document.createElement("audio");
     audio.setAttribute("controls", "");
+    audio.setAttribute("preload", "none");
+    audio.setAttribute("type", "audio/mpeg");
     audio.src = src;
 
     const audioDiv = document.createElement("div");
