@@ -36,5 +36,9 @@ export class App {
 
     this.left.register(this.crossFader);
     this.right.register(this.crossFader);
+
+    this.left.register(this.recordComponent);
+    this.right.register(this.recordComponent);
+    this.beatMaker.register(this.recordComponent);
   }
 }

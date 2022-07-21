@@ -8,6 +8,15 @@ import ma from "../../../public/sounds/ma.mp3";
 export class BeatMakerController extends Controller {
   constructor(target, model, view) {
     super(target, model, view);
+
+    this.observers = [];
+  }
+
+  init() {
+    const { context } = this.getState();
+    const gainNode = context.createGain();
+
+    this.setState({ ...this.getState(), gainNode });
   }
 
   addEvents() {
@@ -47,11 +56,9 @@ export class BeatMakerController extends Controller {
     rawFile.open("GET", files[sound], true);
     rawFile.responseType = "arraybuffer";
     rawFile.onload = async () => {
-      const { context } = this.getState();
+      const { context, gainNode } = this.getState();
       const audioBuffer = await context.decodeAudioData(rawFile.response);
-
       const source = context.createBufferSource();
-      const gainNode = context.createGain();
 
       source.connect(gainNode);
       gainNode.connect(context.destination);
@@ -62,9 +69,8 @@ export class BeatMakerController extends Controller {
   }
 
   playRecord() {
-    const { context, recorded } = this.getState();
+    const { context, recorded, gainNode } = this.getState();
     const source = context.createBufferSource();
-    const gainNode = context.createGain();
 
     source.connect(gainNode);
     gainNode.connect(context.destination);
@@ -126,5 +132,15 @@ export class BeatMakerController extends Controller {
       recordArray: [],
       recorded: audioBuffer,
     });
+  }
+
+  register(observer) {
+    this.observers.push(observer);
+
+    this.notify(this.getState());
+  }
+
+  notify(information) {
+    this.observers.forEach((observer) => observer.update(information));
   }
 }
