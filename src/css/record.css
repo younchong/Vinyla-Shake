@@ -4,6 +4,8 @@
   justify-content: center;
   align-items: center;
   margin: 2vh;
+  color: #C64945;
+  font-family: "digital";
 }
 
 .record-button {
@@ -70,13 +72,12 @@
 
 .record-modal a {
   text-decoration: none;
-  color: white;
+  color: #C64945;
 }
 
 .record-modal-title {
   margin: 10px;
   font-size: 50px;
-  color: white;
 }
 
 .record-modal-audio {

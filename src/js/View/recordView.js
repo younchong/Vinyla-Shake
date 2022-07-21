@@ -91,8 +91,9 @@ export class RecordView {
     audioDiv.className = "record-modal-audio";
 
     const audioLink = document.createElement("a");
-    audioLink.innerText = "link";
+    audioLink.innerText = "download";
     audioLink.href = src;
+    audioLink.setAttribute("download", "mixing");
 
     const deleteButton = document.createElement("input");
     deleteButton.type = "button";
