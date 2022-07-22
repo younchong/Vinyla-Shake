@@ -5,6 +5,8 @@ export class EffectController extends Controller {
     super(target, model, view);
   }
 
+  init() {}
+
   update(information) {
     const { context, source, gainNode } = information;
 
@@ -44,10 +46,17 @@ export class EffectController extends Controller {
       .addEventListener("click", this.changeMode.bind(this));
   }
 
-  mouseDown() {
+  mouseDown(e) {
     const { context, mode } = this.getState();
 
     if (!context) return;
+
+    const canvas = this.target.querySelector(".deck-effect-canvas");
+
+    this.view.makeArrow(
+      e.clientX - canvas.offsetLeft,
+      e.clientY - canvas.offsetTop
+    );
 
     if (mode === "ECHO") {
       const { context, gainNode } = this.getState();
@@ -68,7 +77,6 @@ export class EffectController extends Controller {
       const { context, gainNode, convolver } = this.getState();
       const convolverGain = context.createGain();
 
-      gainNode.disconnect(context.destination);
       gainNode.connect(convolver);
       convolver.connect(convolverGain);
       convolverGain.connect(context.destination);
@@ -101,6 +109,8 @@ export class EffectController extends Controller {
     const { context, mode } = this.getState();
 
     if (!context) return;
+
+    this.view.removeArrow();
 
     if (mode === "ECHO") {
       const { delay, wetLevel } = this.getState();
@@ -138,6 +148,11 @@ export class EffectController extends Controller {
     if (!effectOn) return;
 
     const canvas = this.target.querySelector(".deck-effect-canvas");
+
+    this.view.moveArrow(
+      e.clientX - canvas.offsetLeft,
+      e.clientY - canvas.offsetTop
+    );
 
     if (mode === "ECHO") {
       const { delay, wetLevel } = this.getState();

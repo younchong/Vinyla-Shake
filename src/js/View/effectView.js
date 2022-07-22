@@ -1,6 +1,11 @@
+import { Arrow } from "../Utils/Arrow";
+
 export class EffectView {
   constructor(target) {
     this.target = target;
+
+    this.arrows = [];
+    this.animation = null;
   }
 
   template() {
@@ -36,5 +41,58 @@ export class EffectView {
 
   changeMode(mode) {
     this.target.querySelector(".deck-effect-title").innerText = mode;
+  }
+
+  makeArrow(x, y) {
+    const canvas = this.target.querySelector(".deck-effect-canvas");
+
+    for (let i = 0; i < 15; i++) {
+      this.arrows.push(
+        new Arrow(canvas.width / 2, canvas.height / 2, { x, y }, this.target)
+      );
+    }
+
+    this.playAnimation(0);
+  }
+
+  playAnimation(frame) {
+    const canvas = this.target.querySelector(".deck-effect-canvas");
+    const context = canvas.getContext("2d");
+
+    context.fillStyle = "rgba(0, 0, 0, 0.2)";
+    context.globalCompositeOperation = "source-over";
+    context.globalAlpha = 0.2;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.globalAlpha = 1;
+    context.globalCompositeOperation = "lighter";
+    context.lineCap = "round";
+    context.lineJoin = "round";
+
+    this.arrows.forEach((a) => {
+      a.avoid(this.arrows);
+    });
+    this.arrows.forEach((a) => {
+      a.render(frame);
+    });
+
+    frame += 1;
+    this.animation = requestAnimationFrame(
+      this.playAnimation.bind(this, frame)
+    );
+  }
+
+  moveArrow(x, y) {
+    this.arrows.forEach((a) => {
+      a.target = { x, y };
+    });
+  }
+
+  removeArrow() {
+    const canvas = this.target.querySelector(".deck-effect-canvas");
+    const context = canvas.getContext("2d");
+
+    this.arrows = [];
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    window.cancelAnimationFrame(this.animation);
   }
 }
