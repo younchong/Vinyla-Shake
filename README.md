@@ -30,7 +30,7 @@ Turn Table / audio Mixing / App
 # 실행 화면
 
 | 처음 화면  | 음악 가져오기 | 음악실행 / 녹음 | FX 버튼조작 | 녹음 리스트
-|--|--|--|--|
+|--|--|--|--|--|
 | <img src="/assets/기본.jpg" /> | <img src="/assets/음악가져오기.jpg"/> | <img src="/assets/녹음.jpg" /> | <img src="/assets/FX버튼.jpeg" /> | <img src="/assets/녹음리스트.jpg" /> |
 
 # 🚬 고민들, 문제 해결과정
