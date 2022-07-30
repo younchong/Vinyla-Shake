@@ -46,7 +46,7 @@ export class Deck {
         rotationOffset: 0,
         lastX: 0,
         lastY: 0,
-        size: 512,
+        size: document.body.clientWidth * 0.30,
         lastTime: 0,
         lastAngle: 0,
       }),
