@@ -8,7 +8,7 @@ export class VinylView {
 
     div.className = "deck-middle-vinyl";
     div.innerHTML = `
-    <svg width="512px" viewBox="0 0 512 512" id="record_svg">
+    <svg viewBox="0 0 512 512" id="record_svg">
           <g>
             <g id="record_group">
             <circle

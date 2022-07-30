@@ -98,7 +98,7 @@ export class VinylController extends Controller {
 
         rotation = (deltaX / size) * 180.0 * direction;
       } else {
-        const direction = e.offsetX > size / 2.0 ? 1.0 : -0.5;
+        const direction = e.offsetX > size / 2.0 ? 1.0 : -1.0;
 
         rotation = (deltaY / size) * 180.0 * direction;
       }

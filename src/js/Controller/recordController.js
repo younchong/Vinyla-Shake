@@ -10,8 +10,14 @@ export class RecordController extends Controller {
     const recordModal = document.querySelector(".record-modal");
     const recordModalBack = document.querySelector(".record-modal-back");
 
-    recordButton.addEventListener("touchstart", this.onMouseDown.bind(this));
-    recordButton.addEventListener("touchend", this.onMouseUp.bind(this));
+    if (window.PointerEvent) {
+      recordButton.addEventListener("pointerdown", this.onMouseDown.bind(this));
+      recordButton.addEventListener("pointerup", this.onMouseUp.bind(this));
+    } else {
+      recordButton.addEventListener("mousedown", this.onMouseDown.bind(this));
+      recordButton.addEventListener("mouseup", this.onMouseUp.bind(this));
+    }
+
     recordModal.addEventListener("click", (e) => {
       e.stopPropagation();
     });
