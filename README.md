@@ -1,16 +1,21 @@
 # Vinyla-Shake
-Turn Table / audio Mixing / App
+Turn Table / Audio Mixing / App
+
+🔗 [배포](https://tangerine-cannoli-725cf0.netlify.app
+)
+
+(⛔️ iOS앱을 타켓으로 한 RN의 WebView 기반 개발로 safari 환경에서 실행 권장)
 
 # 💡개발 동기
 
 * 평소 개발 공부를 하면서 DJ Mix set 음악을 많이 들었는데, 음악 들으면서 도움도 많이 받았고, 장비들에 대한 호기심으로 시작하게 됐습니다. 
 *  앱 개발에 대한 관심과 평소 DJ mix 앱에서 아쉬웠던 점인 user의 커스텀이 된 소리들을 넣으면 더 재밌지 않을까 생각했습니다.
-* 대부분의 DJ앱은 유저의 음악파일에 직접 접근해서 가져오는데, ios의 경우 apple 뮤직에 저장되어있지 않으면 가져올 수 없다는 제약사항이 있어서,  단순 mp3 파일로 된 음악만 있다면 사용할 수 있도록 구현했습니다.
+* 대부분의 DJ앱은 유저의 음악파일에 직접 접근해서 가져오는데, 파일들중에 mp3 확장자로 되어있는 파일이 있다면 사용할 수 있도록 구현했습니다.
 
 # 🛠 선택 기술
 
 * Expo Go
-* ES2015+
+* ES6
 * storybook
 * jest
 
@@ -23,9 +28,9 @@ Turn Table / audio Mixing / App
 	* 프로젝트에서 브라우저에서 제공하는 기본 Web Audio API 사용이 필수인데, Expo에서 제공하는 SDK(expo-av)가 Web Audio API의 기능들에 비해 적어서 WebView로 선택.
 * Story Book
   * 시각적인 요소들이 대부분인 앱에서 부분별, UI테스트하기 적합하다고 판단.
-* Vanilla JS (ES2015+)
+* Vanilla JS (ES6)
 	* React사용을 고민하다가 화면 전환이 필요없는 싱글 페이지이고, 지속적으로 변경되는 부분이 vinyl과 canvas(sound bar) 부분이라서, state변화에 따른 렌더링과 life cycle을 고민해야되는 React 사용보다는 vanilla JS를 사용하는게 더 적절하다고 판단했다.
-  * 다른 라이브러리들을 많이 사용해서 그 라이브러리에 의존하기 보다는 vanilla JS만 사용해서 근본부터 시작해서 최대한 스스로 많이 구현해보고 싶다고 생각했다.
+  * 다른 라이브러리들을 많이 사용해서 그 라이브러리에 의존하기 보다는 JS만 사용해서 최대한 스스로 많이 구현해보고 싶었다.
 
 # 실행 화면
 
@@ -34,6 +39,21 @@ Turn Table / audio Mixing / App
 | <img src="/assets/기본.jpg" /> | <img src="/assets/음악가져오기.jpg"/> | <img src="/assets/녹음.jpg" /> | <img src="/assets/FX버튼.jpeg" /> | <img src="/assets/녹음결과.jpg" /> |
 
 # 🚬 고민들, 문제 해결과정
+
+<details>
+<summary>Vinyl 회전</summary>
+<div markdown="1">
+
+* Vinyl이 360도 회전하기 때문에 오른쪽 방향이라도 아랫쪽에선 역방향이고, 윗쪽에서는 정방향이듯, 위치에 따른 차이를 구분해주어야 했다.
+* 처음엔 위치를 나눠 구분하려했지만, 좋지 못한 방법이였고, 고민을 하고 레퍼런스들을 찾아보다가 크게 2방향으로만 나눴다.
+* 우선, x축과 y축 방향 중 더 큰 움직임이 있는 곳을 구한다. (delta X, delta Y)
+* X축 움직임이 더 크다면, 터치가 생긴 곳의 위치를 Vinyl크기 기준으로 파악한다.
+* 터치한 위치(e.offsetY)가 Vinyl 크기 절반보다 작으면 윗쪽이고, 크면 아랫쪽이다.
+* 윗쪽이면 delta X의 양수가 정방향이고, 음수면 역방향이다.
+* 같은 로직으로 Y축 움직임이 더 클 경우도 적용시켜서 구현했다.
+
+</div>
+</details>
 
 <details>
 <summary>MVC와 Observer 패턴</summary>
@@ -75,6 +95,21 @@ Turn Table / audio Mixing / App
 </div>
 </details>
 
+<details>
+<summary>녹음 품질</summary>
+<div markdown="1">
+
+* 처음 Record Component를 구현하려고 할때, BeatMaker Component에서 사용했던 부분 녹음과 같이 자체 mic를 이용해서 기기에서 나오는 소리를 녹음했다.
+* 자체 소리도 잘 녹음이 안될 뿐아니라 다른 소리들도 들어가서 녹음 품질이 떨어졌다.
+* 처음엔 각 context마다 녹음을 하고 만들어진 buffer를 합치려고 했는데, 효율적인 방법은 아니라고 판단했다.
+* sound effect관련 레퍼런스보다가 Audio Bus를 이용해서 context관리하는 것을 봤던 것이 떠올랐다.
+* Record에 사용되는 Audio Bus를 새로 만들어서 왼쪽, 오른쪽 Deck과 beatmaker stream을 각각 연결해서 녹음했다.
+* 프로젝트를 하면서 Web Audio API를 점점 이해하면서, 흐름과 동작과정을 더 정확하게 알게 되면서, 내가 생각했던 방향으로 '이렇게 하면 구현되지 않을까?' 해서 구현하면 정상작동되는 부분들이 점차 많아졌다.
+* 처음부터 특정 기술에 대해 완벽하게 이해하기는 힘들지만, 최대한 인내심을 가지고 공식문서를 정확하게 읽어보고 이해하고 구현하는 것이 시간을 단축할 수 있는 가장 빠른 방법이라는 것을 다시 한번 깨닫게 해주는 순간이었다.
+
+</div>
+</details>
+
 # 🗓 프로젝트 일정
 
  ### 22.06.27 ~ 22.07.15 
@@ -86,6 +121,8 @@ Turn Table / audio Mixing / App
 	* vinyl에 따른 음악 맞추기
 	* 녹음 기능 및 버튼 구현
 
+📖 [회고](https://best-sousaphone-c1e.notion.site/7ddddab54000420b92ba2f3425814fb7)
+
 # 보완할 점
 * ~~녹음 기능 (수정 완료)~~
 	* ~~외부 마이크를 사용해서 전체 녹음을 해서 불필요한소리들이 많이 들어감.~~
@@ -94,6 +131,4 @@ Turn Table / audio Mixing / App
 	* ~~녹음 버튼을 1.5초 이상 누르면 녹음 리스트가 나오는데 길게 터치하는게 모바일 환경에서 적용이 안되고 드래그가 됨.~~
 * ~~각종 터치 (수정 완료)~~
 	* ~~더블클릭에 확대되거나 손가락 두개를 사용할 경우 드래그나 확대되는 경우들 안되도록 수정.~~
-* Vinyl 움직임에 맞춘 음악 수정 (더 정교하도록)
-* cross fader 원래 소리 부터 조절하는 방식으로 수정
- 
+* ~~Vinyl 움직임에 맞춘 음악 수정 (더 정교하도록) (수정 완료)~~
