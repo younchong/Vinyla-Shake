@@ -2,6 +2,9 @@ import "./effectComponent.css";
 
 export const createEffectComponent = ({
   onClick,
+  makeArrow,
+  moveArrow,
+  removeArrow,
 }) => {
   const container = document.createElement("div");
   container.className = "deck-effect";
@@ -21,6 +24,12 @@ export const createEffectComponent = ({
 
   const canvas = document.createElement("canvas");
   canvas.className = "deck-effect-canvas";
+  canvas.addEventListener("pointerdown", makeArrow);
+  canvas.addEventListener(
+    "pointermove",
+    moveArrow
+  );
+  canvas.addEventListener("pointerup", removeArrow);
 
   container.append(header);
   container.append(canvas);
